@@ -1,0 +1,11 @@
+version: '3'
+services:
+
+  redis-server: 
+    image: 'redis'
+
+  node-app:
+    restart: always
+    build: . # запускаем используя Dockerfile
+    ports:
+      - '4445:8081' # слушаем 8081 порт контейнера и показываем на 4001 порту локальной машины
