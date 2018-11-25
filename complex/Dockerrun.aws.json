@@ -1,0 +1,33 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "containerDefinicions": [{
+      "name": "client",
+      "image": "red02raccoon/complex-client",
+      "hostname": "client",
+      "essential": false
+    },
+    {
+      "name": "server",
+      "image": "red02raccoon/complex-server",
+      "hostname": "api",
+      "essential": false
+    },
+    {
+      "name": "worker",
+      "image": "red02raccoon/complex-worker",
+      "hostname": "worker",
+      "essential": false
+    },
+    {
+      "name": "nginx",
+      "image": "red02raccoon/complex-nginx",
+      "hostname": "nginx",
+      "essential": true,
+      "portMappings": [{
+        "hostPort": 80,
+        "containerPort": 80
+      }],
+      "links": ["client", "server"]
+    }
+  ]
+}

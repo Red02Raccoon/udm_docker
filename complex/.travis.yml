@@ -1,0 +1,35 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t red02raccoon/docker-complex-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run red02raccoon/docker-complex-test npm run test -- --coverage
+  # -- --coverage - автоматически выполнить тесты
+
+after_success:
+  - docker build -t red02raccoon/complex-client ./client
+  - docker build -t red02raccoon/complex-nginx ./nginx
+  - docker build -t red02raccoon/complex-server ./server
+  - docker build -t red02raccoon/complex-worker ./worker
+
+  - echo "$DOCKER_PASSORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  - docker ppush red02raccoon/complex-client
+  - docker ppush red02raccoon/complex-nginx
+  - docker ppush red02raccoon/complex-server
+  - docker ppush red02raccoon/complex-worker
+# deploy:
+#   provider: elasticbeanstalk
+#   region: "us-west-2"
+#   app: "docker"
+#   env: "Docker-env"
+#   bucket_name: "elasticbeanstalk-us-west-2-306476627547"
+#   bucket_path: "docker"
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key:
+#     secure: "$AWS_SECRET_KEY"
